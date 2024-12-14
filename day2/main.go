@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -14,11 +15,12 @@ func main() {
 	sum := 0
 
 	for _, i := range sarr {
-		if getSafety(i) {
+		if imporvedGetSafety(i) {
 			sum = sum + 1
 		}
 	}
 	fmt.Println(sum)
+
 }
 
 func ReadFile(filename string) []string {
@@ -59,6 +61,7 @@ func getSafety(inp string) bool {
 
 			if prev < current {
 				return false
+
 			}
 		}
 
@@ -74,4 +77,24 @@ func getSafety(inp string) bool {
 	}
 
 	return true
+}
+
+func imporvedGetSafety(inp string) bool {
+	ssafety := getSafety(inp)
+
+	if ssafety {
+		return ssafety
+	}
+
+	arr := strings.Split(inp, " ")
+
+	for ind := range arr {
+		newInp := slices.Concat(arr[:ind], arr[ind+1:])
+		s := getSafety(strings.Join(newInp, " "))
+		if s {
+			return true
+		}
+	}
+
+	return false
 }
